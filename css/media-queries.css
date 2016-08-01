@@ -1,0 +1,6 @@
+@media and (min-width: 320px) {
+  header {
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+}
