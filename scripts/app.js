@@ -1,4 +1,4 @@
-//find and create elements
+//find and create elements that will be used in functions later
   const $studentList = $('.student-list')
   const $students = $studentList.children()
   const listLength = $studentList.children().length
@@ -8,54 +8,52 @@
 //change properties
   $studentSearch.html('<input placeholder="Search for students..."><button>Search</button>')
 
-  console.log($students[0])
-//add pagination
-    function displayStudents (event) {
-      event.preventDefault()
-      alert(+(this.text()))
-    }
-    function pagesRequired (numStudents) {
-      if(numStudents <= 10)
-        return 0
+function displayStudents (event) {
+  event.preventDefault()
+  alert(+(this.text()))
+}
+function pagesRequired (numStudents) {
+  if(numStudents <= 10)
+    return 0
+  else
+    return Math.floor(numStudents / 10) + 1
+}
+function addSearch (numStudents) {
+  if(numStudents > 10){
+    $header.append($studentSearch)
+  }
+}
+function addPagination (pagesNeeded) {
+  $studentList.append($pagination)
+  if(pagesNeeded > 0){
+    for(var i = 1; i <= pagesNeeded; i++){
+      if(i === 1)
+        $pagination.append('<li><a class="active" href="#">1</a></li>')
       else
-        return Math.floor(numStudents / 10) + 1
+        $pagination.append('<li><a href="#">'+ i + '</a></li>')
     }
-    function addSearch (numStudents) {
-      if(numStudents > 10){
-        $header.append($studentSearch)
-      }
-    }
-    function addPagination (pagesNeeded) {
-      $studentList.append($pagination)
-      if(pagesNeeded > 0){
-        for(var i = 1; i <= pagesNeeded; i++){
-          if(i === 1)
-            $pagination.append('<li><a class="active" href="#">1</a></li>')
-          else
-            $pagination.append('<li><a href="#">'+ i + '</a></li>')
-        }
-      }
-    }
+  }
+}
 
-  function hideAllStudents () {
-    $students.map( (val, el) => $(el).css("display", "none"))
-  }
-  function displayFirst10 (numStudents) {
-    const $hiddenStudents = $studentList.children('li:nth-child(n + 11)')
-    $hiddenStudents.map( (val, el) => $(el).css("display", "none")) //converting is a bitch
-  }
+function hideAllStudents () {
+  $students.map( (val, el) => $(el).css("display", "none"))
+}
+function displayFirst10 (numStudents) {
+  const $hiddenStudents = $studentList.children('li:nth-child(n + 11)')
+  $hiddenStudents.map( (val, el) => $(el).css("display", "none")) //should write a helper function for display logic
+}
 
-  function displayStudentRange (i) {
-    hideAllStudents()
-    if(i === 1) {
-      const showStudents = $studentList.children('li:nth-child(-n + 10)')
-      showStudents.map( (val, el) => $(el).css("display", "block"))
-    }
-    else {
-      const showStudents = $studentList.children('li:nth-child(n + ' + (10 * (i - 1) + 1) + '):nth-child(-n +' + (i  * 10) + ')')
-      showStudents.map( (val, el) => $(el).css("display", "block"))
-    }
+function displayStudentRange (i) {
+  hideAllStudents()
+  if(i === 1) {
+    const showStudents = $studentList.children('li:nth-child(-n + 10)')
+    showStudents.map( (val, el) => $(el).css("display", "block"))
   }
+  else {
+    const showStudents = $studentList.children('li:nth-child(n + ' + (10 * (i - 1) + 1) + '):nth-child(-n +' + (i  * 10) + ')')
+    showStudents.map( (val, el) => $(el).css("display", "block"))
+  }
+}
   /*
   function queryStudentsOnInput(){
     hideAllStudents()
@@ -68,18 +66,17 @@
   }
   */
 
-  function queryStudents(){
-    hideAllStudents()
-    $students.filter( (i, student) => {
-      const studentName = $(student).find('h3').text().toLowerCase()
-      const emailText = $(student).find('span').text().toLowerCase()
-      const inputVal = $("input").val()
-      if(studentName.indexOf(inputVal) != -1 || emailText.indexOf(inputVal) != -1)
-          $(student).css("display", "block")
-    })
-  }
-
-
+function queryStudents(){
+  hideAllStudents()
+  $students.filter( (i, student) => {
+    const studentName = $(student).find('h3').text().toLowerCase()
+    const emailText = $(student).find('span').text().toLowerCase()
+    const inputVal = $("input").val()
+    if(studentName.indexOf(inputVal) != -1 || emailText.indexOf(inputVal) != -1)
+        $(student).css("display", "block")
+  })
+}
+//execute main functionality for program
   addSearch(listLength)
   displayFirst10(listLength)
   addPagination(pagesRequired(listLength))
@@ -92,9 +89,6 @@
       displayStudentRange(+$(this).text())
   })
   
-  function ahh(){
-    alert("Ah!!")
-  }
 //when the search button is clicked, students are shown if their email or name match the input
   $('body').on("click", "button", queryStudents)
   
