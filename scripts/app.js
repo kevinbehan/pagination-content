@@ -42,7 +42,7 @@
   }
   function displayFirst10 (numStudents) {
     const $hiddenStudents = $studentList.children('li:nth-child(n + 11)')
-    $hiddenStudents.map( (val, el) => $(el).css("display", "none")) //should probably build a helper method
+    $hiddenStudents.map( (val, el) => $(el).css("display", "none")) //converting is a bitch
   }
 
   function displayStudentRange (i) {
@@ -56,8 +56,8 @@
       showStudents.map( (val, el) => $(el).css("display", "block"))
     }
   }
-  
-  function queryStudents(){
+  /*
+  function queryStudentsOnInput(){
     hideAllStudents()
     $students.filter( (i, student) => {
       const studentName = $(student).find('h3').text().toLowerCase()
@@ -66,11 +66,24 @@
           $(student).css("display", "block")
     })
   }
+  */
+
+  function queryStudents(){
+    hideAllStudents()
+    $students.filter( (i, student) => {
+      const studentName = $(student).find('h3').text().toLowerCase()
+      const emailText = $(student).find('span').text().toLowerCase()
+      const inputVal = $("input").val()
+      if(studentName.indexOf(inputVal) != -1 || emailText.indexOf(inputVal) != -1)
+          $(student).css("display", "block")
+    })
+  }
+
 
   addSearch(listLength)
   displayFirst10(listLength)
   addPagination(pagesRequired(listLength))
-//when pagination is clicked, it should show the appropriate records
+//when pagination is clicked, it shows the appropriate records
   $('li a').on("click", function(event){
     event.preventDefault()
     $('ul').find('li a.active').removeClass("active")
@@ -79,5 +92,12 @@
       displayStudentRange(+$(this).text())
   })
   
+  function ahh(){
+    alert("Ah!!")
+  }
+//when the search button is clicked, students are shown if their email or name match the input
+  $('body').on("click", "button", queryStudents)
+  
 //when words in search input change, the records should be queried
-  $('body').on("input", "input", queryStudents)
+  //$('body').on("input", "input", queryStudentsOnInput)
+  //With this feature there's not really a point to having a search button
