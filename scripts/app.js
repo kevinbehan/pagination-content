@@ -60,12 +60,12 @@ const hideAllStudents = () => studentRecords.map( record => record.classList.add
   displayStudents: number number -> studentRecordElements
   Takes a start index and an end index to display a specific set of students
 ****/
-function displayStudents(startIndex, endIndex){
+function displayStudents(startIndex, endIndex, studentRecords){
   hideAllStudents()
   const selectedRecords = studentRecords.slice(startIndex, endIndex)
-  selectedRecords.map( record => record.classList.remove("ghost"))
+  selectedRecords.map( record => record[0].classList.remove("ghost"))
 } 
-displayStudents(0, 10) 
+displayStudents(0, 10, expandedStudentRecords) 
 
 /****
   displayedStudentCount: () -> number
@@ -84,7 +84,7 @@ console.assert(displayedStudentCount() === 10,
   getSearchValue: () -> string
   Gets the input value from the searchInput element
 ****/
-const getSearchValue = () => searchInput.value
+const getSearchValue = () => searchInput.value.toLowerCase()
 
 
 //Bind displayMatchedStudents to searchButton's onclick
@@ -133,7 +133,6 @@ console.assert(calcPagination(9) === 0, `${calcPagination(9)} pages were advised
 ****/
 function displayPagination(pagesNeeded){
   _.range(1, pagesNeeded + 1).map( (val, index, arr)=>{
-    console.log(arr)
     const numberedPage = document.createElement("li")
     numberedPage.innerHTML = `<a href="#">${val}</a>`
     numberedPage.addEventListener("click", displayPage)
@@ -150,7 +149,7 @@ function displayPage(evt){
   const pageValue = +(this.innerText)
   paginationContainer.querySelector(".active").classList.remove("active")
   this.querySelector("a").classList.add("active") //get the anchor inside the li
-  displayStudents((pageValue * 10) - 10, pageValue * 10)
+  displayStudents((pageValue * 10) - 10, pageValue * 10, filterNonMatchedStudents(expandedStudentRecords))
 }
 displayPagination(calcPagination(studentRecords.length)) //create pagination for all records on load
 /****
