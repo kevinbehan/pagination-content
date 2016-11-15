@@ -3,7 +3,9 @@ body{
   font-family: Helvetica, sans-serif;
   color: #222;
 }
-
+.ghost {
+  display: none;
+}
 .page{
   margin: 50px auto;
   width: 70%;
